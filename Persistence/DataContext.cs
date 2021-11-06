@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Domain;
+using Microsoft.EntityFrameworkCore;
+
+namespace Persistence
+{
+    public class DataContext : DbContext
+    {
+        public DataContext(DbContextOptions options) : base(options)
+        {
+
+        }
+        //Table in database
+        public DbSet<SynthesisBatch> SynthesisBatch { get; set; }
+        
+    }
+
+}
