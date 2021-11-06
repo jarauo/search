@@ -17,16 +17,32 @@ namespace API.Controllers
         {
             _context = context;
         }
+        
+        /*
+        End point for returning all syntheses from database
+        */
         [HttpGet]
         public async Task<ActionResult<List<SynthesisBatch>>> GetSynthesisBatches() 
         {
             return await _context.SynthesisBatch.ToListAsync();
         }
+
+        /*
+        End point for returning a synthesis that corresponds to specified id
+        */
         [HttpGet("{id}")]
         public async Task<ActionResult<SynthesisBatch>> GetSynthesisBatch(Guid id)
         {
             return await _context.SynthesisBatch.FindAsync(id);
         }
+
+        /*
+        Custom End Point with multiple optional parameter support. 
+        TO DO: 
+         - add all wanted parameters
+         - check if all parameters are null then make the date parameter to be current year by default so that the query won't 
+           return the whole table
+        */
         [HttpGet("bySearch")]
         public async Task<ActionResult<List<SynthesisBatch>>> Get([FromQuery] string synthesisCode,[FromQuery] string synthesisMaker) {
             var synthesisMakerCompare = synthesisMaker;
