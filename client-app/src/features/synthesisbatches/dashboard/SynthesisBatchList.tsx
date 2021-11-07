@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { SynthesisBatch } from '../../../app/models/synthesisbatch';
 
@@ -6,9 +6,17 @@ interface Props {
     synthesisbatches: SynthesisBatch[];
     selectSynthesisBatch: (id: string) => void;
     deleteSynthesisBatch: (id: string) => void;
+    submitting: boolean;
 }
 
-export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatch,deleteSynthesisBatch}: Props) {
+export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatch,deleteSynthesisBatch,submitting}: Props) {
+    const [target, setTarget] = useState('');
+
+    function handleSynthesisBatchDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
+        setTarget(e.currentTarget.name);
+        deleteSynthesisBatch(id);
+    }
+    
     return(
         <Segment>
             <Item.Group divided>
@@ -23,7 +31,14 @@ export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatc
                             </Item.Description>
                             <Item.Extra>
                                 <Button onClick={() => selectSynthesisBatch(synthesisbatch.id)} floated='right' content='View' color='blue' />
-                                <Button onClick={() => deleteSynthesisBatch(synthesisbatch.id)} floated='right' content='Delete' color='red' />
+                                <Button 
+                                    name={synthesisbatch.id}
+                                    loading={submitting && target === synthesisbatch.id} 
+                                    onClick={(e) => handleSynthesisBatchDelete(e,synthesisbatch.id)} 
+                                    floated='right' 
+                                    content='Delete' 
+                                    color='red' 
+                                />
                                 <Label basic content={synthesisbatch.cyclotron} />
                             </Item.Extra>
                         </Item.Content>

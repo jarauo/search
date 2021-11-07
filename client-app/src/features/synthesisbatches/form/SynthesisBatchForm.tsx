@@ -6,9 +6,10 @@ interface Props {
     synthesisbatch: SynthesisBatch | undefined;
     closeForm: () => void;
     createOrEdit: (synthesisbatch: SynthesisBatch) => void;
+    submitting: boolean;
 }
 
-export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBatch, closeForm, createOrEdit}: Props) {
+export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBatch, closeForm, createOrEdit,submitting}: Props) {
 
     const initialState = selectedSynthesisBatch ?? {
         id: '',
@@ -38,7 +39,7 @@ export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBat
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete='off'>
                 <Form.Input placeholder='SynthesisBatchNumber' value={synthesisBatch.batchNumber} name='batchNumber' onChange={handleInputChange}/>
-                <Form.Input placeholder='Date' value={synthesisBatch.date} name='date' onChange={handleInputChange}/>
+                <Form.Input type='date' placeholder='Date' value={synthesisBatch.date} name='date' onChange={handleInputChange}/>
                 <Form.Input placeholder='StartTime' value={synthesisBatch.startTime} name='startTime' onChange={handleInputChange}/>
                 <Form.Input placeholder='EndTime' value={synthesisBatch.endTime} name='endTime' onChange={handleInputChange}/>
                 <Form.Input placeholder='TargetryPerson' value={synthesisBatch.targetryPerson} name='targetryPerson' onChange={handleInputChange}/>
@@ -46,7 +47,7 @@ export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBat
                 <Form.Input placeholder='QcPerson' value={synthesisBatch.qcPerson} name='qcPerson' onChange={handleInputChange}/>
                 <Form.Input placeholder='Releaser' value={synthesisBatch.releaser} name='releaser' onChange={handleInputChange}/>
                 <Form.Input placeholder='Cyclotron' value={synthesisBatch.cyclotron} name='cyclotron' onChange={handleInputChange}/>
-                <Button floated='right' positive type='submit' content='Submit'/>
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit'/>
                 <Button onClick={closeForm} floated='right' type='button' content='Cancel'/>
             </Form>
         </Segment>

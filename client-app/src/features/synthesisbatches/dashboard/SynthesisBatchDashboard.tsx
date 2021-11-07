@@ -15,16 +15,18 @@ interface Props {
     closeForm: () => void;
     createOrEdit: (synthesisbatch: SynthesisBatch) => void;
     deleteSynthesisBatch: (id: string) => void;
+    submitting: boolean;
 }
 
 export default function SynthesisBatchDashboard({synthesisbatches, selectedSynthesisBatch, selectSynthesisBatch, 
-        cancelSelectSynthesisBatch, editMode, openForm, closeForm, createOrEdit, deleteSynthesisBatch}: Props) {
+        cancelSelectSynthesisBatch, editMode, openForm, closeForm, createOrEdit, deleteSynthesisBatch, submitting}: Props) {
     return (
         <Grid>
             <Grid.Column width='10'>
             <SynthesisBatchList synthesisbatches={synthesisbatches} 
                 selectSynthesisBatch={selectSynthesisBatch}
                 deleteSynthesisBatch={deleteSynthesisBatch}
+                submitting={submitting}
             />
             </Grid.Column>
             <Grid.Column width='6'>
@@ -36,7 +38,12 @@ export default function SynthesisBatchDashboard({synthesisbatches, selectedSynth
 
                 />}
                 {editMode &&
-                <SynthesisBatchForm closeForm={closeForm} synthesisbatch={selectedSynthesisBatch} createOrEdit={createOrEdit}/> }
+                <SynthesisBatchForm 
+                    closeForm={closeForm} 
+                    synthesisbatch={selectedSynthesisBatch} 
+                    createOrEdit={createOrEdit}
+                    submitting={submitting}
+                />}
             </Grid.Column>
         </Grid>
     )

@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { SynthesisBatch } from '../models/synthesisbatch';
 import NavBar from './NavBar';
 import SynthesisBatchDashboard from '../../features/synthesisbatches/dashboard/SynthesisBatchDashboard';
 import {v4 as uuid} from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 function App() {
   const [synthesisbatches, setSynthesisbatches] = useState<SynthesisBatch[]>([]);
   const [selectedSynthesisBatch, setSelectedSynthesisBatch] = useState<SynthesisBatch | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    axios.get<SynthesisBatch[]>('http://localhost:5000/api/SynthesisBatch').then(response => {
-      //console.log(response);
-      setSynthesisbatches(response.data);
+    agent.SynthesisBatches.list().then(response => {
+      let synthesisbatches: SynthesisBatch[] = [];
+      response.forEach(synthesisbatch => {
+        synthesisbatch.date = "1/1/2021";
+        synthesisbatches.push(synthesisbatch);
+      })
+      setSynthesisbatches(response);
+      setLoading(false);
     })
   },[])
 
@@ -36,16 +44,35 @@ function App() {
   }
 
   function handleCreateorEditSynthesisBatch(synthesisbatch: SynthesisBatch) {
-    synthesisbatch.id 
-    ? setSynthesisbatches([...synthesisbatches.filter(x => x.id !== synthesisbatch.id), synthesisbatch])
-    : setSynthesisbatches([...synthesisbatches, {...synthesisbatch, id: uuid()}]);
-    setEditMode(false);
-    setSelectedSynthesisBatch(synthesisbatch);
+    setSubmitting(true);
+    if (synthesisbatch.id) {
+      agent.SynthesisBatches.update(synthesisbatch).then(() => {
+        setSynthesisbatches([...synthesisbatches.filter(x => x.id !== synthesisbatch.id), synthesisbatch])
+        setSelectedSynthesisBatch(synthesisbatch);
+        setEditMode(false);
+        setSubmitting(false);
+      })
+    } else {
+      synthesisbatch.id = uuid();
+      agent.SynthesisBatches.create(synthesisbatch).then(() => {
+        setSynthesisbatches([...synthesisbatches, synthesisbatch])
+        setSelectedSynthesisBatch(synthesisbatch);
+        setEditMode(false);
+        setSubmitting(false);
+      })
+    }
   }
 
   function handleDeleteSynthesisBatch(id: string) {
-    setSynthesisbatches([...synthesisbatches.filter(x => x.id !== id)])
+    setSubmitting(true);
+    agent.SynthesisBatches.delete(id).then(() => {
+      setSynthesisbatches([...synthesisbatches.filter(x => x.id !== id)])
+      setSubmitting(false);
+    })
+    
   }
+
+  if (loading) return <LoadingComponent content='Loading app'/>
 
   return (
     <>
@@ -61,6 +88,7 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateorEditSynthesisBatch}
           deleteSynthesisBatch={handleDeleteSynthesisBatch}
+          submitting={submitting}
         />
       </Container>
     </>
