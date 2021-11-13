@@ -1,15 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
-import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    synthesisbatches: SynthesisBatch[];
-    selectSynthesisBatch: (id: string) => void;
-    deleteSynthesisBatch: (id: string) => void;
-    submitting: boolean;
-}
-
-export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatch,deleteSynthesisBatch,submitting}: Props) {
+export default observer (function SynthesisBatchList() {
+    
+    const {synthesisBatchStore} = useStore();
+    const {deleteSynthesisBatch, synthesisBatchesByStartTime, loading} = synthesisBatchStore;
     const [target, setTarget] = useState('');
 
     function handleSynthesisBatchDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
@@ -20,7 +17,7 @@ export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatc
     return(
         <Segment>
             <Item.Group divided>
-                {synthesisbatches.map(synthesisbatch => (
+                {synthesisBatchesByStartTime.map(synthesisbatch => (
                     <Item key={synthesisbatch.id}>
                         <Item.Content>
                             <Item.Header as='a'>{synthesisbatch.batchNumber}</Item.Header>
@@ -30,10 +27,10 @@ export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatc
                                 <div>{synthesisbatch.releaser}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button onClick={() => selectSynthesisBatch(synthesisbatch.id)} floated='right' content='View' color='blue' />
+                                <Button onClick={() => synthesisBatchStore.selectSynthesisBatch(synthesisbatch.id)} floated='right' content='View' color='blue' />
                                 <Button 
                                     name={synthesisbatch.id}
-                                    loading={submitting && target === synthesisbatch.id} 
+                                    loading={loading && target === synthesisbatch.id} 
                                     onClick={(e) => handleSynthesisBatchDelete(e,synthesisbatch.id)} 
                                     floated='right' 
                                     content='Delete' 
@@ -47,4 +44,4 @@ export default function SynthesisBatchList({synthesisbatches,selectSynthesisBatc
             </Item.Group>
         </Segment>
     )
-}
+})

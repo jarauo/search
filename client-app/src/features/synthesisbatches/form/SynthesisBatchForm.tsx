@@ -1,15 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
 import { Button, Form, Segment } from 'semantic-ui-react';
-import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    synthesisbatch: SynthesisBatch | undefined;
-    closeForm: () => void;
-    createOrEdit: (synthesisbatch: SynthesisBatch) => void;
-    submitting: boolean;
-}
+export default observer(function SynthesisBatchForm() {
 
-export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBatch, closeForm, createOrEdit,submitting}: Props) {
+    const {synthesisBatchStore} = useStore();
+    const {selectedSynthesisBatch, closeForm, createSynthesisBatch, updateSynthesisBatch, loading} = synthesisBatchStore;
 
     const initialState = selectedSynthesisBatch ?? {
         id: '',
@@ -27,7 +24,7 @@ export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBat
     const [synthesisBatch, setSynthesisBatch] = useState(initialState);
 
     function handleSubmit() {
-        createOrEdit(synthesisBatch);
+        synthesisBatch.id ? updateSynthesisBatch(synthesisBatch) : createSynthesisBatch(synthesisBatch);
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -47,9 +44,9 @@ export default function SynthesisBatchForm({synthesisbatch: selectedSynthesisBat
                 <Form.Input placeholder='QcPerson' value={synthesisBatch.qcPerson} name='qcPerson' onChange={handleInputChange}/>
                 <Form.Input placeholder='Releaser' value={synthesisBatch.releaser} name='releaser' onChange={handleInputChange}/>
                 <Form.Input placeholder='Cyclotron' value={synthesisBatch.cyclotron} name='cyclotron' onChange={handleInputChange}/>
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit'/>
+                <Button loading={loading} floated='right' positive type='submit' content='Submit'/>
                 <Button onClick={closeForm} floated='right' type='button' content='Cancel'/>
             </Form>
         </Segment>
     )
-}
+})

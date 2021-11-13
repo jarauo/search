@@ -1,16 +1,15 @@
 import React from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
-import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { useStore } from '../../../app/stores/store';
 
+export default function SynthesisBatchDetails() {
 
-interface Props {
-    synthesisbatch: SynthesisBatch;
-    cancelSelectSynthesisBatch: () => void;
-    openForm: (id: string) => void;
+    const {synthesisBatchStore} = useStore();
+    const {selectedSynthesisBatch: synthesisbatch, openForm, cancelSelectedSynthesisBatch} = synthesisBatchStore;
 
-}
+    if (!synthesisbatch) return <LoadingComponent />;
 
-export default function SynthesisBatchDetails({synthesisbatch,cancelSelectSynthesisBatch, openForm}: Props) {
     return(
         <Card fluid>
             <Image src={'/assets/radioactive.jpg'}/>
@@ -26,7 +25,7 @@ export default function SynthesisBatchDetails({synthesisbatch,cancelSelectSynthe
                 <Card.Content extra>
                     <Button.Group widths='2'>
                         <Button onClick={() => openForm(synthesisbatch.id)} basic color='blue' content='Edit' />
-                        <Button onClick={cancelSelectSynthesisBatch} basic color='grey' content='Cancel' />
+                        <Button onClick={cancelSelectedSynthesisBatch} basic color='grey' content='Cancel' />
                     </Button.Group>
                 </Card.Content>
         </Card>
