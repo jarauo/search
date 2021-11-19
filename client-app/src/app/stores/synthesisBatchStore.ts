@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { SynthesisBatch } from "../models/synthesisbatch";
-import {v4 as uuid} from 'uuid';
 
 export default class SynthesisBatchStore {
     synthesisBatchRegistry = new Map<string, SynthesisBatch>();
@@ -21,11 +20,11 @@ export default class SynthesisBatchStore {
     }
 
     loadSynthesisBatches = async () => {
+        this.loadingInitial = true;
         try {
             const synthesisBatches = await agent.SynthesisBatches.list();
             synthesisBatches.forEach(synthesisbatch => {
-                synthesisbatch.date = "1/1/2021";
-                this.synthesisBatchRegistry.set(synthesisbatch.id, synthesisbatch);
+                this.setSynthesisBatch(synthesisbatch);
             })
             this.setLoadingInitial(false);
         } catch (error) {
@@ -34,30 +33,43 @@ export default class SynthesisBatchStore {
         }
     }
 
+    loadSynthesisBatch = async (id: string) => {
+        let synthesisBatch = this.getSynthesisBatch(id);
+        if (synthesisBatch) {
+            this.selectedSynthesisBatch = synthesisBatch;
+            return synthesisBatch;
+        } else {
+            this.loadingInitial = true;
+            try {
+                synthesisBatch = await agent.SynthesisBatches.details(id);
+                this.setSynthesisBatch(synthesisBatch);
+                runInAction(() => {
+                    this.selectedSynthesisBatch = synthesisBatch;
+                })
+                this.setLoadingInitial(false);
+                return synthesisBatch;
+            } catch (error) {
+                console.log(error);
+                this.setLoadingInitial(false);
+            }
+        }
+    }
+
+    private setSynthesisBatch = (synthesisbatch: SynthesisBatch) => {
+        synthesisbatch.date = "1/1/2021";
+        this.synthesisBatchRegistry.set(synthesisbatch.id, synthesisbatch);
+    }
+
+    private getSynthesisBatch = (id: string) => {
+        return this.synthesisBatchRegistry.get(id);
+    }
+
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
 
-    selectSynthesisBatch = (id: string) => {
-        this.selectedSynthesisBatch = this.synthesisBatchRegistry.get(id);
-    }
-
-    cancelSelectedSynthesisBatch = () => {
-        this.selectedSynthesisBatch = undefined;
-    }
-
-    openForm = (id?: string) => {
-        id ? this.selectSynthesisBatch(id) : this.cancelSelectedSynthesisBatch();
-        this.editMode = true;
-    }
-
-    closeForm = () => {
-        this.editMode = false;
-    }
-
     createSynthesisBatch = async (synthesisbatch: SynthesisBatch) => {
         this.loading = true;
-        synthesisbatch.id = uuid();
         try {
             await agent.SynthesisBatches.create(synthesisbatch);
             runInAction(() => {
@@ -99,7 +111,6 @@ export default class SynthesisBatchStore {
             await agent.SynthesisBatches.delete(id);
             runInAction(() => {
                 this.synthesisBatchRegistry.delete(id);
-                if (this.selectedSynthesisBatch?.id === id) this.cancelSelectedSynthesisBatch();
                 this.loading = false;
             })
         } catch (error) {
