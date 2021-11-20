@@ -17,7 +17,7 @@ namespace Persistence
                 new SynthesisBatch
                 {
                     BatchNumber = "21FPE001PT",
-                    Date = "12-1-2021",
+                    Date = DateTime.Now.AddMonths(-2),
                     StartTime = "9:50",
                     EndTime = "10:22",
                     TargetryPerson = "JFR",
@@ -29,7 +29,7 @@ namespace Persistence
                 new SynthesisBatch
                 {
                     BatchNumber = "21FHA001PT",
-                    Date = "22-5-2021",
+                    Date = DateTime.Now.AddMonths(-2),
                     StartTime = "10:30",
                     EndTime = "11:00",
                     TargetryPerson = "JFR",

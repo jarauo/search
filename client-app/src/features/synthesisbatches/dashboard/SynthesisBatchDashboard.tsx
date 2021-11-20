@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Grid } from 'semantic-ui-react';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
+import SynthesisBatchFilters from './SynthesisBatchFilters';
 import SynthesisBatchList from './SynthesisBatchList';
 
 export default observer ( function SynthesisBatchDashboard() {
@@ -21,7 +22,7 @@ export default observer ( function SynthesisBatchDashboard() {
             <SynthesisBatchList />
             </Grid.Column>
             <Grid.Column width='6'>
-                <h2>SynthesisBatchFilter</h2>
+                <SynthesisBatchFilters />
             </Grid.Column>
         </Grid>
     )

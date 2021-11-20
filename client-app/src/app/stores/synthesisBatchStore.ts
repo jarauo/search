@@ -19,6 +19,21 @@ export default class SynthesisBatchStore {
             Date.parse(a.startTime) - Date.parse(b.startTime));
     }
 
+    get synthesisBatchesByDate() {
+        return Array.from(this.synthesisBatchRegistry.values()).sort((a,b) =>
+            Date.parse(a.date) - Date.parse(b.date));
+    }
+
+    get groupedSynthesisBatches() {
+        return Object.entries(
+            this.synthesisBatchesByDate.reduce((synthesisBatches, synthesisbatch) => {
+                const date = synthesisbatch.date;
+                synthesisBatches[date] = synthesisBatches[date] ? [...synthesisBatches[date], synthesisbatch] : [synthesisbatch];
+                return synthesisBatches;
+            }, {} as {[key: string]: SynthesisBatch[]})
+        )
+    }
+
     loadSynthesisBatches = async () => {
         this.loadingInitial = true;
         try {
@@ -56,7 +71,7 @@ export default class SynthesisBatchStore {
     }
 
     private setSynthesisBatch = (synthesisbatch: SynthesisBatch) => {
-        synthesisbatch.date = "1/1/2021";
+        synthesisbatch.date = synthesisbatch.date.split('T')[0];
         this.synthesisBatchRegistry.set(synthesisbatch.id, synthesisbatch);
     }
 

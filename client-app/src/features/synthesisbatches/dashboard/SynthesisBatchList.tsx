@@ -1,48 +1,29 @@
 import { observer } from 'mobx-react-lite';
-import React, { SyntheticEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Item, Label, Segment } from 'semantic-ui-react';
+import React, { Fragment } from 'react';
+import { Header } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
+//import SynthesisBatchStore from '../../../app/stores/synthesisBatchStore';
+import SynthesisBatchListItem from './SynthesisBatchListItem';
 
 export default observer (function SynthesisBatchList() {
     
     const {synthesisBatchStore} = useStore();
-    const {deleteSynthesisBatch, synthesisBatchesByStartTime, loading} = synthesisBatchStore;
-    const [target, setTarget] = useState('');
-
-    function handleSynthesisBatchDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
-        setTarget(e.currentTarget.name);
-        deleteSynthesisBatch(id);
-    }
+    //const {synthesisBatchesByStartTime} = synthesisBatchStore;
+    const {groupedSynthesisBatches} = synthesisBatchStore;
     
     return(
-        <Segment>
-            <Item.Group divided>
-                {synthesisBatchesByStartTime.map(synthesisbatch => (
-                    <Item key={synthesisbatch.id}>
-                        <Item.Content>
-                            <Item.Header as='a'>{synthesisbatch.batchNumber}</Item.Header>
-                            <Item.Meta>{synthesisbatch.synthesisPerson}</Item.Meta>
-                            <Item.Description>
-                                <div>{synthesisbatch.startTime},{synthesisbatch.endTime}</div>
-                                <div>{synthesisbatch.releaser}</div>
-                            </Item.Description>
-                            <Item.Extra>
-                                <Button as={Link} to ={`/synthesisBatches/${synthesisbatch.id}`}floated='right' content='View' color='blue' />
-                                <Button 
-                                    name={synthesisbatch.id}
-                                    loading={loading && target === synthesisbatch.id} 
-                                    onClick={(e) => handleSynthesisBatchDelete(e,synthesisbatch.id)} 
-                                    floated='right' 
-                                    content='Delete' 
-                                    color='red' 
-                                />
-                                <Label basic content={synthesisbatch.cyclotron} />
-                            </Item.Extra>
-                        </Item.Content>
-                    </Item>
-                ))}
-            </Item.Group>
-        </Segment>
+        <>
+            {groupedSynthesisBatches.map(([group, synthesisBatches]) => (
+                <Fragment key={group}>
+                    <Header sub color='teal'>
+                        {group}
+                    </Header>
+                        {synthesisBatches.map(synthesisbatch => (
+                            <SynthesisBatchListItem key={synthesisbatch.id} synthesisbatch={synthesisbatch} />
+                        ))}
+                </Fragment>
+            ))}
+        </>
+        
     )
 })

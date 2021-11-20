@@ -38,17 +38,19 @@ namespace Application.SynthesisBatches
                 //Check if all parameters are null give a default parameter to decrease the query result
                 var synthesisMakerCompare = request.SynthesisPerson;
 
+                /* Commented for testing
                 if (String.IsNullOrEmpty(request.BatchNumber) && String.IsNullOrEmpty(request.Date) &&
                 String.IsNullOrEmpty(request.StartTime) && String.IsNullOrEmpty(request.EndTime) &&
                 String.IsNullOrEmpty(request.TargetryPerson) && String.IsNullOrEmpty(request.SynthesisPerson) &&
                 String.IsNullOrEmpty(request.QCPerson) && String.IsNullOrEmpty(request.Releaser) && String.IsNullOrEmpty(request.Cyclotron)) {
                     synthesisMakerCompare = "JU";
                 }
+                */
 
                 //LINQ with given parameters and exclude the nulls
                 var ctx = from s in _context.SynthesisBatch
                 where (s.BatchNumber == request.BatchNumber || request.BatchNumber == null) &&
-                (s.Date == request.Date || request.Date == null) &&
+                (s.Date.ToString() == request.Date || request.Date == null) &&
                 (s.StartTime == request.StartTime || request.StartTime == null) &&
                 (s.EndTime == request.EndTime || request.EndTime == null) &&
                 (s.TargetryPerson == request.TargetryPerson || request.TargetryPerson == null) &&

@@ -9,7 +9,7 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public String BatchNumber { get; set; }
-        public String Date { get; set; }
+        public DateTime Date { get; set; }
         public String StartTime { get; set; }
         public String EndTime { get; set; }
         public String TargetryPerson { get; set; }
