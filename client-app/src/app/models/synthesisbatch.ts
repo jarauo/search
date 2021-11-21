@@ -1,7 +1,7 @@
 export interface SynthesisBatch {
     id: string;
     batchNumber: string;
-    date: string;
+    date: Date | null;
     startTime: string;
     endTime: string;
     targetryPerson: string;

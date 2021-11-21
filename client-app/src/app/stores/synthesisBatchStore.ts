@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { SynthesisBatch } from "../models/synthesisbatch";
@@ -7,7 +8,7 @@ export default class SynthesisBatchStore {
     selectedSynthesisBatch: SynthesisBatch | undefined = undefined;
     editMode = false;
     loading = false;
-    loadingInitial = true;
+    loadingInitial = false;
 
 
     constructor() {
@@ -21,13 +22,13 @@ export default class SynthesisBatchStore {
 
     get synthesisBatchesByDate() {
         return Array.from(this.synthesisBatchRegistry.values()).sort((a,b) =>
-            Date.parse(a.date) - Date.parse(b.date));
+            a.date!.getDate() - b.date!.getDate());
     }
 
     get groupedSynthesisBatches() {
         return Object.entries(
             this.synthesisBatchesByDate.reduce((synthesisBatches, synthesisbatch) => {
-                const date = synthesisbatch.date;
+                const date = format(synthesisbatch.date!, 'dd.MM.yyyy');
                 synthesisBatches[date] = synthesisBatches[date] ? [...synthesisBatches[date], synthesisbatch] : [synthesisbatch];
                 return synthesisBatches;
             }, {} as {[key: string]: SynthesisBatch[]})
@@ -71,7 +72,7 @@ export default class SynthesisBatchStore {
     }
 
     private setSynthesisBatch = (synthesisbatch: SynthesisBatch) => {
-        synthesisbatch.date = synthesisbatch.date.split('T')[0];
+        synthesisbatch.date = new Date(synthesisbatch.date!);
         this.synthesisBatchRegistry.set(synthesisbatch.id, synthesisbatch);
     }
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
 import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 const synthesisBatchImageStyle = {
     filter: 'brightness(30%)'
@@ -34,7 +36,7 @@ export default observer (function SynthesisBatchDetailedHeader({synthesisBatch}:
                                     content={synthesisBatch.batchNumber}
                                     style={{color: 'white'}}
                                 />
-                                <p>{synthesisBatch.date}</p>
+                                <p>{format(synthesisBatch.date!, 'dd.MM.yyyy')}</p>
                                 <p>Hosted by <strong>JU</strong></p>
                             </Item.Content>
                         </Item>
@@ -44,7 +46,7 @@ export default observer (function SynthesisBatchDetailedHeader({synthesisBatch}:
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join SynthesisBatch</Button>
                 <Button>Cancel attendance</Button>
-                <Button color='orange' floated='right'>
+                <Button as={Link} to={`/manage/${synthesisBatch.id}`} color='orange' floated='right'>
                     Manage Event
                 </Button>
             </Segment>

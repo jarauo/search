@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Icon, Item, Segment } from 'semantic-ui-react';
 import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import {format} from 'date-fns';
 
 interface Props {
     synthesisbatch: SynthesisBatch
@@ -25,7 +26,7 @@ export default function SynthesisBatchListItem({synthesisbatch}: Props) {
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' /> {synthesisbatch.date}
+                    <Icon name='clock' /> {format(synthesisbatch.date!, 'dd.MM.yyyy')}
                     <Icon name='marker' /> {synthesisbatch.startTime}
                 </span>
             </Segment>

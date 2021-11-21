@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {Segment, Grid, Icon} from 'semantic-ui-react'
 import { SynthesisBatch } from '../../../app/models/synthesisbatch';
+import { format } from 'date-fns';
 
 interface Props {
     synthesisBatch: SynthesisBatch
@@ -27,7 +28,7 @@ export default observer (function SynthesisBatchDetailedInfo({synthesisBatch}: P
                     </Grid.Column>
                     <Grid.Column width={15}>
             <span>
-              {synthesisBatch.date}
+              {format(synthesisBatch.date!, 'dd.MM.yyyy')}
             </span>
                     </Grid.Column>
                 </Grid>
