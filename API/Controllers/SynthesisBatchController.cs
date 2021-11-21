@@ -18,39 +18,40 @@ namespace API.Controllers
         End point for returning all syntheses from database that match to the given parameters
         */
         [HttpGet]
-        public async Task<ActionResult<List<SynthesisBatch>>> GetSynthesisBatches(string batchnumber, string date, string starttime, string endtime, string targetryperson, string synthesisperson, string qcperson, string releaser, string cyclotron) 
+        public async Task<IActionResult> GetSynthesisBatches() 
         {
             //return Ok();
-            return await Mediator.Send(new List.Query{BatchNumber = batchnumber, Date = date, StartTime = starttime, EndTime = endtime, TargetryPerson = targetryperson, SynthesisPerson = synthesisperson, QCPerson = qcperson, Releaser = releaser, Cyclotron = cyclotron});
+            return HandleResult(await Mediator.Send(new List.Query{}));
         }
 
         /*
-        End point for returning a single synthesis that corresponds to specified id
+        End point for returning a single synthesis that corresponds to a specific id
         */
         [HttpGet("{id}")]
-        public async Task<ActionResult<SynthesisBatch>> GetSynthesisBatch(Guid id)
+        public async Task<IActionResult> GetSynthesisBatch(Guid id)
         {
             //return Ok();
-            return await Mediator.Send(new Details.Query{Id = id});
+            //return await Mediator.Send(new Details.Query{Id = id});
+            return HandleResult(await Mediator.Send(new Details.Query{Id = id}));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateSynthesisBatch(SynthesisBatch synthesisbatch)
         {
-            return Ok(await Mediator.Send(new Create.Command {SynthesisBatch = synthesisbatch}));
+            return HandleResult(await Mediator.Send(new Create.Command {SynthesisBatch = synthesisbatch}));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> EditSynthesisBatch(Guid id, SynthesisBatch synthesisbatch)
         {
             synthesisbatch.Id = id;
-            return Ok(await Mediator.Send(new Edit.Command{SynthesisBatch = synthesisbatch}));
+            return HandleResult(await Mediator.Send(new Edit.Command{SynthesisBatch = synthesisbatch}));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSynthesisBatch(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command{Id = id}));
+            return HandleResult(await Mediator.Send(new Delete.Command{Id = id}));
         }
 
 

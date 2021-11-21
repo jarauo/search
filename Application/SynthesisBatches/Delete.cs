@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using MediatR;
 using Persistence;
 
@@ -10,12 +11,12 @@ namespace Application.SynthesisBatches
 {
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
         private readonly DataContext _context;
             public Handler(DataContext context)
@@ -23,18 +24,22 @@ namespace Application.SynthesisBatches
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var synthesisbatch = await _context.SynthesisBatch.FindAsync(request.Id);
+
+                //if (synthesisbatch == null) return null;
 
                 //Remove from memory
                 _context.Remove(synthesisbatch);
 
                 //Save changes to database (remove from database)
-                await _context.SaveChangesAsync();
+                var result = await _context.SaveChangesAsync() > 0;
+
+                if (!result) return Result<Unit>.Failure("Failed to delete the SynthesisBatch");
 
                 //return nothing
-                return Unit.Value;
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }

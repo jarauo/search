@@ -11,6 +11,7 @@ export default function NavBar() {
                     SynthesisBatches
                 </Menu.Item>
                 <Menu.Item as={NavLink} to='/synthesisBatches' name='SynthesisBatches' />
+                <Menu.Item as={NavLink} to='/errors' name='TestErrors' />
                 <Menu.Item>
                     <Button as={NavLink} to='/createSynthesisBatch' positive content='Create SynthesisBatch' />
                 </Menu.Item>

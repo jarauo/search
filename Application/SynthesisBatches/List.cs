@@ -7,13 +7,15 @@ using Domain;
 using System.Threading;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
+using Application.Core;
 
 namespace Application.SynthesisBatches
 {
     public class List
     {
-        public class Query : IRequest<List<SynthesisBatch>> {
+        public class Query : IRequest<Result<List<SynthesisBatch>>> {
             
+            /*
             public String BatchNumber { get; set; }
             public String Date { get; set; }
             public String StartTime { get; set; }
@@ -23,9 +25,10 @@ namespace Application.SynthesisBatches
             public String QCPerson { get; set; }
             public String Releaser { get; set; }
             public String Cyclotron { get; set; }
+            */
         }
 
-        public class Handler : IRequestHandler<Query, List<SynthesisBatch>>
+        public class Handler : IRequestHandler<Query, Result<List<SynthesisBatch>>>
         {
             private readonly DataContext _context;
             public Handler(DataContext context)
@@ -33,10 +36,11 @@ namespace Application.SynthesisBatches
                 _context = context;
             }
 
-            public async Task<List<SynthesisBatch>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<SynthesisBatch>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                return Result<List<SynthesisBatch>>.Success( await _context.SynthesisBatch.ToListAsync(cancellationToken));
                 //Check if all parameters are null give a default parameter to decrease the query result
-                var synthesisMakerCompare = request.SynthesisPerson;
+                //var synthesisMakerCompare = request.SynthesisPerson;
 
                 /* Commented for testing
                 if (String.IsNullOrEmpty(request.BatchNumber) && String.IsNullOrEmpty(request.Date) &&
@@ -48,6 +52,7 @@ namespace Application.SynthesisBatches
                 */
 
                 //LINQ with given parameters and exclude the nulls
+                /*
                 var ctx = from s in _context.SynthesisBatch
                 where (s.BatchNumber == request.BatchNumber || request.BatchNumber == null) &&
                 (s.Date.ToString() == request.Date || request.Date == null) &&
@@ -61,7 +66,8 @@ namespace Application.SynthesisBatches
                 select s;
             
                 return await ctx.ToListAsync();
-                //return Ok();   
+                //return Ok(); 
+                */  
             }
         }
     }
