@@ -33,7 +33,10 @@ namespace API.Extensions
                     policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
                 });
             });
+
+            //Apparently adds everything in Application project to MediatR
             services.AddMediatR(typeof(List.Handler).Assembly);
+            //services.AddMediatR(typeof(ListDapper.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             return services;

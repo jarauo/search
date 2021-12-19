@@ -40,6 +40,7 @@ namespace API
 
             services.AddControllers().AddFluentValidation(config =>
             {
+                //Takes assembly from Application project. No need to add other validators.
                 config.RegisterValidatorsFromAssemblyContaining<Create>();
             });
 

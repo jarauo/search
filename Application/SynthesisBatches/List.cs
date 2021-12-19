@@ -8,6 +8,7 @@ using System.Threading;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 using Application.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.SynthesisBatches
 {
@@ -31,14 +32,19 @@ namespace Application.SynthesisBatches
         public class Handler : IRequestHandler<Query, Result<List<SynthesisBatch>>>
         {
             private readonly DataContext _context;
+            //private readonly IConfiguration _configuration;
             public Handler(DataContext context)
             {
                 _context = context;
+                //_configuration = config;
             }
 
             public async Task<Result<List<SynthesisBatch>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return Result<List<SynthesisBatch>>.Success( await _context.SynthesisBatch.ToListAsync(cancellationToken));
+                
+
+                
                 //Check if all parameters are null give a default parameter to decrease the query result
                 //var synthesisMakerCompare = request.SynthesisPerson;
 

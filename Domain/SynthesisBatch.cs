@@ -7,7 +7,7 @@ namespace Domain
 {
     public class SynthesisBatch
     {
-        public Guid Id { get; set; }
+        public String Id { get; set; }
         public String BatchNumber { get; set; }
         public DateTime Date { get; set; }
         public String StartTime { get; set; }
@@ -19,4 +19,6 @@ namespace Domain
         public String Cyclotron { get; set; }
 
     }
+
+    
 }

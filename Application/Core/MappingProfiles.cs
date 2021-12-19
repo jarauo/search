@@ -12,6 +12,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<SynthesisBatch, SynthesisBatch> ();
+            CreateMap<AikatauluFromBackend, AikatauluFromBackend> ();
         }
     }
 }

@@ -21,7 +21,8 @@ namespace API.Controllers
         public async Task<IActionResult> GetSynthesisBatches() 
         {
             //return Ok();
-            return HandleResult(await Mediator.Send(new List.Query{}));
+            //return HandleResult(await Mediator.Send(new List.Query{}));
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
 
         /*
@@ -44,7 +45,7 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditSynthesisBatch(Guid id, SynthesisBatch synthesisbatch)
         {
-            synthesisbatch.Id = id;
+            //synthesisbatch.Id = id;
             return HandleResult(await Mediator.Send(new Edit.Command{SynthesisBatch = synthesisbatch}));
         }
 
