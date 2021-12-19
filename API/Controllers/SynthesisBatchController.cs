@@ -22,7 +22,7 @@ namespace API.Controllers
         {
             //return Ok();
             //return HandleResult(await Mediator.Send(new List.Query{}));
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandleResult(await Mediator.Send(new List.Query{}));
         }
 
         /*

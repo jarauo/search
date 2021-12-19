@@ -17,8 +17,8 @@ export default class SynthesisBatchStore {
 
     get synthesisBatchesByStartTime() {
         return Array.from(this.synthesisBatchRegistry.values()).sort((a, b) => 
-            //Date.parse(a.startTime) - Date.parse(b.startTime));
-            Date.parse(a.date) - Date.parse(b.date));
+            Date.parse(a.startTime) - Date.parse(b.startTime));
+            //Date.parse(a.date) - Date.parse(b.date));
     }
 
     get synthesisBatchesByDate() {
